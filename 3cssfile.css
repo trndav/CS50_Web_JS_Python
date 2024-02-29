@@ -1,0 +1,22 @@
+h2 {
+    color: black;
+    text-align: center;
+}
+div {
+    color: rgb(17, 0, 255);
+    background-color: orange;
+    width: 200px;
+    height: 300px;
+    padding: 20px;
+    margin: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+    border: 3px solid black;
+}
+
+/* Specificity
+1. inline
+2. id
+3. class
+4. type */

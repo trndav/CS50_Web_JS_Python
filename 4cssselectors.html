@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>CSS Selectors</title>
+        <style>
+            /* Select all li children of ul tag = Descendant or child selector */
+            ul > li {
+                color: rgb(255, 17, 0);
+            }
+            a {
+                color: brown;
+            }
+            a[href="https://discord.com/"] {
+                color: green;
+            }
+            button {
+                width: 200px;
+                height: 50px;
+                font-size: 24px;
+                background-color: orange;
+            }
+            button:hover {
+                background-color: green;
+            }
+        </style>
+        <meta name="viewport" content="width=device-width", initial-scale="1.0">
+    </head>
+    <body>        
+        <h1>CSS tutorial</h1>
+        <h2>H2 css in head</h2>
+        Example some text.
+        <div>
+            Some styled text in div tags.
+        </div>
+        <ol>
+            <li>List item 1</li>
+            <li>List item 2</li>
+            <ul>
+                <li>Sublist 1</li>
+                <li>Sublist 2</li>
+            </ul>
+            <li>List item 3</li>
+                <ul>
+                    <li><a href="http://www.google.com">Visit Google - default color is brown</a></li>
+                    <li><a href="https://discord.com/">Visit Discord color green - attribute selector</a></li>
+                </ul>
+            <li>List item 4</li>
+        </ol>
+        Pseudoclass <br>
+        <button>Click Me!</button>
+    </body>
+</html>
