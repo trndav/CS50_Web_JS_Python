@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Search</title>
+        <style>
+            .links {
+                text-align: right;
+            }
+            form {
+                text-align: left;
+
+            }
+            input[type="text"] {
+                margin: 5px; /* Add margin to inputs for spacing */
+                border-radius: 25px; /* Add border-radius to inputs */
+                padding: 5px; /* Add padding to inputs for spacing */
+            }
+            input[type="submit"] {
+                margin: 5px; /* Add margin to inputs for spacing */
+                border-radius: 25px; /* Add border-radius to inputs */
+                padding: 5px; /* Add padding to inputs for spacing */
+                background-color: rgb(91, 91, 253);
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="links">
+            <a href="index.html">Home</a>
+            <a href="imagesearch.html">Search Images</a>
+            <a href="advancedsearch.html">Advanced Search</a>
+        </div>
+        
+        <form action="https://www.google.com/search">
+            <input type="hidden" value="all">
+            <input type="text" id="xX4UFf" placeholder="Search all these words" name="as_q"><br>    
+
+            <input type="text" id="CwYCWc" placeholder="Exact these words" name="as_epq"><br>
+
+            <input type="text" id="mSoczb" placeholder="Any of these words" name="as_oq"><br>
+
+            <input type="text" id="t2dX1c" placeholder="Search none of these words" name="as_eq"><br>
+          
+            <input type="submit" background-color="blue" value="Advanced Search">
+        </form>
+    </body>
+    
+</html>
