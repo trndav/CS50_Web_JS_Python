@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ title }}</h1>
-    <p>{{ entry_content }}</p>
+    <p>{{ entry_content|safe }}</p>
+    <a href="{% url 'encyclopedia:edit' title=title %}">Edit Page</a>
 
 {% endblock %}
