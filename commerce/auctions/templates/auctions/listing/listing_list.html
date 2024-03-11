@@ -1,0 +1,13 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Listings</h2>
+    <ul>
+        {% for item in listings %}
+            <li>{{ item.title }}</li>
+            <li>{{ item.text }}</li>
+            <li>{{ item.start_bid }}</li>
+            <li><img src="{{ item.image.url }}" alt="Listing Image" class="img-fluid"></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

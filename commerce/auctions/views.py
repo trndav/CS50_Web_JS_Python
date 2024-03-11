@@ -1,9 +1,9 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from .models import User, Comment
+from .models import User, Comment, Listing
 from django.contrib.auth.decorators import login_required
 from django import forms
 
@@ -82,5 +82,45 @@ def show_comments(request):
     comments = Comment.objects.all()  # Retrieve all comments from the database
     return render(request, 'auctions/show_comments.html', {'comments': comments})
 
-def tests(request):
-    return render(request, 'auctions/test.html')
+# Create/load listing model
+class ListingForm(forms.ModelForm):
+    class Meta:
+        model = Listing
+        fields = ['title', 'text', 'start_bid', 'image']
+
+# List listing objects
+def listing_list(request):
+    listings = Listing.objects.all()
+    return render(request, 'auctions/listing/listing_list.html', {'listings': listings})
+
+# Create new listing
+def create_listing(request):
+    if request.method == 'POST':
+        form = ListingForm(request.POST, request.FILES)
+        if form.is_valid():
+            listing = form.save(commit=False)
+            listing.user = request.user
+            form.save()
+            return redirect('listing_list')
+    else:
+        form = ListingForm()
+    return render(request, 'auctions/listing/create_listing.html', {'form': form})
+    
+# Edit listing
+def edit_listing(request, pk):
+    listing = get_object_or_404(Listing, pk=pk)
+    if request.method == 'POST':
+        form = ListingForm(request.POST, request.FILES, instance=listing)
+        if form.is_valid():
+            form.save()
+            return redirect('listing_list')
+    else:
+        form = ListingForm(instance=listing)
+    return render(request, 'auctions/listing/edit_listing.html', {'form': form})
+
+def delete_listing(request, pk):
+    listing = get_object_or_404(Listing, pk=pk)
+    if request.method == 'POST':
+        listing.delete()
+        return redirect('listing_list')
+    return render(request, 'auctions/listing/delete_listing.html', {'listing': listing})
