@@ -91,7 +91,7 @@ class ListingForm(forms.ModelForm):
 # List listing objects
 def listing_list(request):
     listings = Listing.objects.all()
-    return render(request, 'auctions/listing/listing_list.html', {'listings': listings})
+    return render(request, 'auctions/listing/index.html', {'listings': listings})
 
 # Create new listing
 def create_listing(request):
@@ -124,3 +124,8 @@ def delete_listing(request, pk):
         listing.delete()
         return redirect('listing_list')
     return render(request, 'auctions/listing/delete_listing.html', {'listing': listing})
+
+# For delete listing
+def listing_detail(request, pk):
+    listing = get_object_or_404(Listing, pk=pk)
+    return render(request, 'auctions/listing/listing_detail.html', {'listing': listing})

@@ -6,9 +6,6 @@ from django.core.exceptions import ValidationError
 class User(AbstractUser):
     pass
 
-class Listing():
-    pass
-
 class Bid():
     pass
 
