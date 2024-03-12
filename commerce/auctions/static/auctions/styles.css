@@ -1,3 +1,18 @@
 body {
     padding: 10px;
 }
+
+.listing_container {
+    border: 1px solid #ccc;
+    border-radius: 10px; /* Adjust the value to control the roundness of the border */
+    padding: 20px;
+}
+
+.table_margin {
+    padding-left: 50px;
+}
+
+.created_at {
+    font-size: 0.8em;
+    color: grey;
+}

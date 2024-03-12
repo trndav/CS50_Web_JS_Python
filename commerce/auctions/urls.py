@@ -16,5 +16,10 @@ urlpatterns = [
     path("auctions/listing/<int:pk>/delete/", views.delete_listing, name="delete_listing"),
     path("auctions/listing/listing_list/", views.listing_list, name="listing_list"), 
     path("auctions/listing/<int:pk>/", views.listing_detail, name="listing_detail"), 
+    path('auctions/listing/add_to_watchlist/<int:listing_id>/', views.add_to_watchlist, name='add_to_watchlist'),
+    path('auctions/listing/remove_from_watchlist/<int:listing_id>/', views.remove_from_watchlist, name='remove_from_watchlist'),
+    path('auctions/listing/watchlist/', views.watchlist_page, name='watchlist_page'),
+    path('auctions/listing/<int:listing_id>/place_bid/', views.place_bid, name='place_bid'),
+    path('auctions/listing/error/', views.error, name='error'),
     # Images do not display without this:
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

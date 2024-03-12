@@ -1,7 +1,39 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-        <h2>{{ listing.title }}</h2>
-        <p><strong>Description:</strong> {{ listing.description }}</p>
-        <p><strong>Price:</strong> ${{ listing.price }}</p>
+<div class="listing_container">
+        <table>
+        <td>{% if listing.image %}
+                <img src="{{ listing.image.url }}" alt="Listing Image" class="img-fluid"><br>
+                {% endif %}
+        </td>
+        <td class="table_margin">                
+                <h4>{{ listing.title }}</h4>
+                <b>Price: ${{ listing.start_bid }}</b></br>
+                Listing Id: {{ listing.id }}. {{ listing.text }}<br>
+                <p class="created_at">Created at: {{ listing.created_at }}</p>
+               
+                {% if user.is_authenticated %}
+               
+                <form method="post" action="{% url 'place_bid' listing.id %}">
+                        {% csrf_token %}
+                        <label for="bid_amount">Your Bid Amount:</label>
+                        <input type="number" name="bid_amount" step="0.01" min="{{ listing.start_bid }}">
+                        <button type="submit">Place Bid</button>
+                </form>
+
+                        {% if watchlist_items %}
+                                <a href="{% url 'remove_from_watchlist' listing.pk %}">Remove from Watchlist</a>
+                        {% else %}
+                                <a href="{% url 'add_to_watchlist' listing.pk %}">Add to Watchlist</a>
+                        {% endif %}
+                {% endif %}
+
+                <form method="post" action="{% url 'delete_listing' listing.pk %}">
+                        {% csrf_token %}
+                        <input type="submit" value="Delete Item">
+                </form>
+        </td>
+        </table>
+        </div><br>
 {% endblock %}

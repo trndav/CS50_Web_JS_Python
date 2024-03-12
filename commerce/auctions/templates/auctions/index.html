@@ -2,14 +2,14 @@
 
 {% block body %}
     <h2>Active Listings</h2>
-todo
+todo - NOT USED
     <ul>
         {% for item in listings %}
-            <li>{{ item.title }}</li>
+            <img src="{{ item.image.url }}" alt="Listing Image" class="img-fluid">
+            {{ item.title }}
             <li>{{ item.text }}</li>
-            <li>{{ item.start_bid }}</li>
-            <li><img src="{{ item.image.url }}" alt="Listing Image" class="img-fluid"></li>
-            
+            <li>{{ item.start_bid }}</li>            
+            <br>
             <form method="post" action="{% url 'delete_listing' item.pk %}">
                 {% csrf_token %}
                 <input type="submit" value="Delete">

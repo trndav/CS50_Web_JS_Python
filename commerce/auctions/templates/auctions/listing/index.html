@@ -2,18 +2,27 @@
 
 {% block body %}
     <h2>Active Listings</h2>
-todo
-    <ul>
+    
         {% for item in listings %}
-            <li>{{ item.title }}</li>
-            <li>{{ item.text }}</li>
-            <li>{{ item.start_bid }}</li>
-            <li><img src="{{ item.image.url }}" alt="Listing Image" class="img-fluid"></li>
-            
-            <form method="post" action="{% url 'delete_listing' item.pk %}">
-                {% csrf_token %}
-                <input type="submit" value="Delete">
-            </form>            
+        <div class="listing_container">            
+            <table>                
+                <td>
+                    {% if item.image %}
+                    <a href="auctions/listing/{{ item.id }}"><img src="{{ item.image.url }}" alt="Listing Image" class="img-fluid"></a><br>
+                    {% endif %}
+                </td>
+                <td class="table_margin">
+                    <h4><a href="auctions/listing/{{ item.id }}">{{ item.title }}</a></h4>
+                    <b>Price: ${{ item.start_bid }}</b></br>
+                    Listing Id: {{ item.id }}. {{ item.text }}<br>
+                    <p class="created_at">Created at: {{ item.created_at }}</p>    
+                    <form method="post" action="{% url 'delete_listing' item.pk %}">
+                        {% csrf_token %}
+                        <input type="submit" value="Delete">
+                    </form>
+                </td>
+            </table>
+        </div><br>
         {% endfor %}
-    </ul>
+      
 {% endblock %}

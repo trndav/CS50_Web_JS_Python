@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from .models import User, Comment, Listing
+from .models import User, Comment, Listing, Watchlist, Bid
 from django.contrib.auth.decorators import login_required
 from django import forms
 
@@ -125,7 +125,50 @@ def delete_listing(request, pk):
         return redirect('listing_list')
     return render(request, 'auctions/listing/delete_listing.html', {'listing': listing})
 
-# For delete listing
+# For single item view listing
 def listing_detail(request, pk):
     listing = get_object_or_404(Listing, pk=pk)
-    return render(request, 'auctions/listing/listing_detail.html', {'listing': listing})
+    watchlist_items = Watchlist.objects.filter(user=request.user, listing=listing)
+    return render(request, 'auctions/listing/listing_detail.html', {'listing': listing, 'watchlist_items': watchlist_items})
+
+# Add to watchlist
+@login_required
+def add_to_watchlist(request, listing_id):
+    listing = get_object_or_404(Listing, pk=listing_id)
+    watchlist_item, created = Watchlist.objects.get_or_create(user=request.user, listing=listing)
+    return redirect('listing_detail', pk=listing_id)
+
+# Remove from watchlist
+@login_required
+def remove_from_watchlist(request, listing_id):
+    listing = get_object_or_404(Listing, pk=listing_id)
+    Watchlist.objects.filter(user=request.user, listing=listing).delete()
+    return redirect('listing_detail', pk=listing_id)
+
+# Show watchlist items
+def watchlist_page(request):
+    # Retrieve watchlist items for the current user
+    watchlist_items = Watchlist.objects.filter(user=request.user)
+    return render(request, 'auctions/listing/watchlist.html', {'watchlist_items': watchlist_items})
+
+def place_bid(request, listing_id):
+    if request.method == 'POST':
+        bid_amount = request.POST.get('bid_amount')
+        print("Received bid amount:", bid_amount)
+        listing = get_object_or_404(Listing, pk=listing_id)
+
+        if float(bid_amount) >= float(listing.start_bid) and float(bid_amount) > float(listing.current_highest_bid):
+            listing.current_highest_bid = bid_amount
+            listing.start_bid = bid_amount
+            print(listing.current_highest_bid)
+            listing.save()
+            Bid.objects.create(user=request.user, listing=listing, bid_amount=bid_amount)
+            return redirect('listing_detail', pk=listing_id)
+        else:
+            error_message = "Your bid must be large as starting bid and greater than current highest bid."
+            return render(request, 'auctions/listing/error.html', {'error_message': error_message})
+    else:
+        pass
+
+def error(request):
+    return render(request, 'error.html')

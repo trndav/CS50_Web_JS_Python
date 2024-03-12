@@ -6,9 +6,6 @@ from django.core.exceptions import ValidationError
 class User(AbstractUser):
     pass
 
-class Bid():
-    pass
-
 # Build comments module
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -34,6 +31,19 @@ class Listing(models.Model):
     image = models.ImageField(upload_to='listing_images/', validators=[validate_image_size], blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    current_highest_bid = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     def __str__(self):
         return self.title
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    def __str__(self):
+        return f"{self.user.username}'s Watchlist"
+    
+class Bid(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    bid_amount = models.DecimalField(max_digits=10, decimal_places=2)
+
+    
