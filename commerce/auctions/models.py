@@ -6,16 +6,6 @@ from django.core.exceptions import ValidationError
 class User(AbstractUser):
     pass
 
-# Build comments module
-class Comment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    text = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f'Comment by {self.user.username} on {self.created_at}'
-
 # Image validator - cant be greater than 500 KB
 def validate_image_size(value):
     filesize = value.size
@@ -36,6 +26,16 @@ class Listing(models.Model):
     winner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='won_listings')
     def __str__(self):
         return self.title
+
+# Build comments module
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField()
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='comments', default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return f'Comment by {self.user.username} on {self.created_at}'
 
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

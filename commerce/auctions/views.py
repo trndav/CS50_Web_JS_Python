@@ -6,6 +6,7 @@ from django.urls import reverse
 from .models import User, Comment, Listing, Watchlist, Bid
 from django.contrib.auth.decorators import login_required
 from django import forms
+from .forms import CommentForm
 
 def index(request):
     return render(request, "auctions/index.html")
@@ -57,7 +58,7 @@ def register(request):
         return render(request, "auctions/register.html")
 
 @login_required
-def create_comment(request):
+def create_comment(request, listing_id):
     class CommentForm(forms.ModelForm):
         class Meta:
             model = Comment
@@ -73,14 +74,20 @@ def create_comment(request):
             comment = form.save(commit=False)
             comment.user = request.user
             comment.save()
-            return redirect('show_comments')  # Redirect to the appropriate page after comment creation
+            return redirect('listing_detail', listing_id=listing_id)
     else:
         form = CommentForm()
-    return render(request, 'auctions/create_comment.html', {'form': form})
+    # return render(request, 'auctions/create_comment.html', {'form': form})
+    return render(request, 'auctions/listing/listing_detail.html', {'form': form})
 
 def show_comments(request):
     comments = Comment.objects.all()  # Retrieve all comments from the database
     return render(request, 'auctions/show_comments.html', {'comments': comments})
+
+# Show comments on item listing page
+def index(request):
+    comments = Comment.objects.all()  # Retrieve all comments from the database
+    return render(request, 'auctions/listing/listing_detail.html', {'comments': comments})
 
 # Create/load listing model
 class ListingForm(forms.ModelForm):
@@ -104,6 +111,7 @@ def create_listing(request):
             return redirect('listing_list')
     else:
         form = ListingForm()
+    
     return render(request, 'auctions/listing/create_listing.html', {'form': form})
     
 # Edit listing
@@ -129,7 +137,25 @@ def delete_listing(request, pk):
 def listing_detail(request, pk):
     listing = get_object_or_404(Listing, pk=pk)
     watchlist_items = Watchlist.objects.filter(user=request.user, listing=listing)
-    return render(request, 'auctions/listing/listing_detail.html', {'listing': listing, 'watchlist_items': watchlist_items})
+    comments = Comment.objects.all()
+    comments = listing.comments.all()  # Retrieve comments related to the listing
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        if text:
+            Comment.objects.create(user=request.user, listing=listing, text=text)
+            return redirect('listing_detail', pk=pk)   
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            text = form.cleaned_data['text']
+            # Save the comment to the database
+            Comment.objects.create(user=request.user, listing=listing, text=text)
+            return redirect('listing_detail', pk=pk)
+    else:
+        form = CommentForm()
+
+    return render(request, 'auctions/listing/listing_detail.html', {'listing': listing, 'watchlist_items': watchlist_items, 'comments': comments, 'form': form})
 
 # Add to watchlist
 @login_required

@@ -19,11 +19,19 @@
                     {% endif %}
                     <b>Price: ${{ item.start_bid }}</b></br>
                     Listing Id: {{ item.id }}. {{ item.text }}<br>
-                    <p class="created_at">Created at: {{ item.created_at }}</p>    
+                    <p class="created_at">Created at: {{ item.created_at }}</p>
+                    
+                    <form method="post" action="{% url 'listing_detail' item.pk %}">
+                        {% csrf_token %}
+                        <input type="submit" value="Bid">
+                    </form>   
+
+                    {% if user.is_authenticated %}
                     <form method="post" action="{% url 'delete_listing' item.pk %}">
                         {% csrf_token %}
                         <input type="submit" value="Delete">
                     </form>
+                    {% endif %}
                 </td>
             </table>
         </div><br>

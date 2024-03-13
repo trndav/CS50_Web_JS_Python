@@ -12,7 +12,7 @@
                     {% if not listing.is_active %}
                         <p>This listing is closed.</p>
                         {% if user == listing.winner %}
-                            <h5>Congratulations {{ listing.winner.username }}! You have won this auction!</h5>
+                            <h5>{{ listing.winner.username }} has won this auction!</h5>
                         {% else %}
                             <p>Sorry, you did not win this auction.</p>
                         {% endif %}
@@ -56,5 +56,31 @@
                 </form>
         </td>
         </table>
-        </div><br>
+        </div>
+        <br>
+        <div class="listing_container">
+        <table>
+        <h5>Comments:</h5>
+        {% for comment in comments %}
+        <div>
+        <ul>
+                <p><b>{{ comment.user.username }}</b> on <b style='font-size: 0.7em; color: grey;'>{{ comment.created_at }}</b><br> {{ comment.text }}</p>
+        </ul>
+        </div>
+        {% endfor %}
+        <br>
+        {% if user.is_authenticated %}
+        <h4>Create a Comment</h4>
+        <form method="post">
+            {% csrf_token %}            
+            <textarea class="form-control" id="id_text" name="text" maxlength="500" required style="width: 400px; height: 120px;"></textarea>
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+        {% else %}
+                <p>You must be logged in to comment.</p>
+        {% endif %}
+        </table>
+        </div>
+        <br>
 {% endblock %}
