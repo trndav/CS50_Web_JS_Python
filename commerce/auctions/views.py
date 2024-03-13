@@ -147,9 +147,9 @@ def remove_from_watchlist(request, listing_id):
 
 # Show watchlist items
 def watchlist_page(request):
-    # Retrieve watchlist items for the current user
+    listing = Listing.objects.all()
     watchlist_items = Watchlist.objects.filter(user=request.user)
-    return render(request, 'auctions/listing/watchlist.html', {'watchlist_items': watchlist_items})
+    return render(request, 'auctions/listing/watchlist.html', {'watchlist_items': watchlist_items, 'listing': listing})
 
 def place_bid(request, listing_id):
     if request.method == 'POST':
@@ -172,3 +172,16 @@ def place_bid(request, listing_id):
 
 def error(request):
     return render(request, 'error.html')
+
+# Close bid for logged user
+def close_auction(request, listing_id):
+    listing = get_object_or_404(Listing, pk=listing_id)
+    if request.user == listing.user:
+        listing.is_active = False
+        listing.winner = listing.user
+        listing.save()
+    return redirect('listing_detail', pk=listing_id)
+
+def all_listing(request):
+    listings = Listing.objects.all()
+    return render(request, 'auctions/listing/all_listing.html', {'listings': listings})

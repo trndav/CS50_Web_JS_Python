@@ -1,15 +1,23 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>Watchlist</h2>
     
         {% for item in watchlist_items %}
         <div class="listing_container">            
             <table>                
-                <td>
-                    <a href="{% url 'listing_detail' item.listing.id %}"><img src="{{ item.listing.image.url }}" alt="Listing Image" class="img-fluid"></a><br>
-                </td>
-                <td class="table_margin">
+                <td>{% if item.listing.image %}
+                    <a href="{% url 'listing_detail' item.listing.id %}"><img src="{{ item.listing.image.url }}" style="width: 200px; height: 200px;" alt="Listing Image" class="img-fluid"></a><br>
+                    {% endif %}
+                </td>                
+                <td class="table_margin">                     
+                    {% if user.is_authenticated %}
+                        {% if not item.listing.is_active %}                        
+                            <h5>[SOLD!] {{ item.listing.winner }} won this auction!</h5>
+                        {% endif %}
+                    {% endif %}
+  
+
                     <h4>{{ item.listing.title }}</h4>
                     <b>Price: ${{ item.listing.start_bid }}</b></br>
                     Listing Id: {{ item.listing.id }}. {{ item.listing.text }}<br>

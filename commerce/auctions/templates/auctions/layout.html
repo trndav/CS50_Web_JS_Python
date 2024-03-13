@@ -21,6 +21,9 @@
                 <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="{% url 'all_listing' %}">All Listings</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="{% url 'create_listing' %}">Create Listings</a>
             </li>
             {% if user.is_authenticated %}
