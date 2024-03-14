@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("", views.listing_list, name="index"),
-    path("login", views.login_view, name="login"),
+    path("login/", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
     path('auctions/listing/create-comment/', views.create_comment, name='create_comment'),

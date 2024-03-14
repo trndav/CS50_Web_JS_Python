@@ -15,7 +15,7 @@
     <body>
         <h1>Auctions</h1>
         <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-end">
-            <a class="navbar-brand" href="{% url 'index' %}">Welcome!</a>
+            <a class="navbar-brand" href="{% url 'index' %}">Bid & Win</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -23,10 +23,7 @@
               <ul class="navbar-nav">
                 <li class="nav-item active">
                   <a class="nav-link" href="{% url 'index' %}">Active Listings<span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'create_listing' %}">Create Listings</a>
-                </li>                
+                </li>              
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Categories
@@ -37,7 +34,9 @@
                     <a class="dropdown-item" href="{% url 'all_listing' %}">All Listings</a>
                   </div>
                 </li>
-
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'create_listing' %}">Create Listings</a>
+                </li>  
                 {% if user.is_authenticated %}
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'watchlist_page' %}">Watchlist</a>

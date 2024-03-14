@@ -140,6 +140,7 @@ def delete_listing(request, pk):
     return render(request, 'auctions/listing/delete_listing.html', {'listing': listing})
 
 # For single item view listing
+@login_required(login_url='/login/')
 def listing_detail(request, pk):
     listing = get_object_or_404(Listing, pk=pk)
     watchlist_items = Watchlist.objects.filter(user=request.user, listing=listing)
@@ -162,6 +163,30 @@ def listing_detail(request, pk):
         form = CommentForm()
 
     return render(request, 'auctions/listing/listing_detail.html', {'listing': listing, 'watchlist_items': watchlist_items, 'comments': comments, 'form': form})
+
+
+# @login_required(login_url='/login/')  # Redirect non-authenticated users to the login page
+# def listing_detail(request, pk):
+#     listing = get_object_or_404(Listing, pk=pk)
+#     watchlist_items = None
+#     comments = None
+#     form = None
+#     if request.method == 'POST':
+#         if request.user.is_authenticated:
+#             form = CommentForm(request.POST)
+#             if form.is_valid():
+#                 text = form.cleaned_data['text']
+#                 Comment.objects.create(user=request.user, listing=listing, text=text)
+#                 return redirect('listing_detail', pk=pk)
+#         else:
+#             message = "You must be logged in to see auction items."
+#             return redirect('login_view', {'message': message})
+#     # Retrieve watchlist items and comments only if the user is authenticated
+#     if request.user.is_authenticated:
+#         watchlist_items = Watchlist.objects.filter(user=request.user, listing=listing)
+#         comments = listing.comments.all()
+#         form = CommentForm()
+#     return render(request, 'auctions/listing/listing_detail.html', {'listing': listing, 'watchlist_items': watchlist_items, 'comments': comments, 'form': form})
 
 # Add to watchlist
 @login_required

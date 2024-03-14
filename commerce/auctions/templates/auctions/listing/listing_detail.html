@@ -7,7 +7,7 @@
                 <img src="{{ listing.image.url }}" style="width: 200px; height: 200px;" alt="Listing Image" class="img-fluid"><br>
                 {% endif %}
         </td>
-        <td class="table_margin">  
+        <td class="table_margin" style="padding-right: 10px;">  
                 {% if user.is_authenticated %}
                     {% if not listing.is_active %}
                         <p>This listing is closed.</p>
@@ -42,12 +42,18 @@
                         {% endif %}
                 {% endif %}
 
-                {% if user.is_authenticated and listing.user == user and listing.is_active %}
-                        <form method="post" action="{% url 'close_auction' listing.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-warning btn-sm">Close Auction</button> <button type="delete" class="btn btn-danger btn-sm">Delete Auction</button>
-                        </form>
+                <div style="display: flex;">
+                {% if listing.user == user and listing.is_active %}
+                <form method="post" style="padding-right: 10px;" action="{% url 'close_auction' listing.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning btn-sm">Close Auction</button>
+                </form>
+                <form method="post" action="{% url 'delete_listing' listing.pk %}">
+                        {% csrf_token %}
+                        <button type="delete" class="btn btn-danger btn-sm">Delete Auction</button>
+                    </form>
                 {% endif %}
+                </div>
         </td>
         </table>
         </div>
