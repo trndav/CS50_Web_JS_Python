@@ -1,7 +1,8 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>    
+    <h2>Active Listings</h2>
+    
         {% for item in listings %}
         {% if item.is_active %}
 
@@ -24,12 +25,12 @@
                     <p class="created_at">Created at: {{ item.created_at }}</p>    
 
                     <form method="post" action="{% url 'listing_detail' item.pk %}">
-                        {% csrf_token %}
+                        {% csrf_token %} 
                         <button type="submit" class="btn btn-primary btn-sm" value="Bid">Bid</button>
                     </form>   
                 </td>
             </table>
-            </div>
+        </div>
         </div>
         <br>
         {% if forloop.counter|divisibleby:2 or forloop.last %}

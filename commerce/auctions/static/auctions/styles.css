@@ -8,10 +8,6 @@ body {
     padding: 20px;
 }
 
-.table_margin {
-    padding-left: 50px;
-}
-
 .created_at {
     font-size: 0.8em;
     color: grey;

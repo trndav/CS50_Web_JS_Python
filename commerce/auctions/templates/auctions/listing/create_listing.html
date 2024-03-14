@@ -6,16 +6,28 @@
         {% csrf_token %}
         <div class="form-group">
             <label for="id_title">Title:</label>
-            <input type="text" class="form-control" id="id_title" name="title" maxlength="100" required style="width: 400px;">
+            <input type="text" class="form-control" id="id_title" autocomplete='on' name="title" maxlength="100" required style="width: 400px;">
         </div>
         <div class="form-group"></div>
             <label for="id_text">Text:</label>            
-            <textarea class="form-control" id="id_text" name="text" maxlength="500" required style="width: 400px; height: 120px;"></textarea>
+            <textarea class="form-control" id="id_text" name="text" autocomplete='on' maxlength="500" required style="width: 400px; height: 120px;"></textarea>
         </div>
         <div class="form-group"></div>
             <label for="id_bid">Start bid:</label>
             <input type="text" class="form-control" id="id_start_bid" name="start_bid" required style="width: 200px;">
         </div>
+        <br>
+
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select class="form-control" id="category" name="category" required style="width: 200px;">
+                <option value="">Select a category</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
         <br>
         <div class="form-group">
             <label for="id_image">Image:</label>

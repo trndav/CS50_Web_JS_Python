@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from .models import User, Comment, Listing, Watchlist, Bid
+from .models import User, Comment, Listing, Watchlist, Bid, Category
 from django.contrib.auth.decorators import login_required
 from django import forms
 from .forms import CommentForm
@@ -105,14 +105,20 @@ def create_listing(request):
     if request.method == 'POST':
         form = ListingForm(request.POST, request.FILES)
         if form.is_valid():
+            category_id = request.POST.get('category') # Retrieve the selected category ID from the form data
+            category = Category.objects.get(pk=category_id)  # Retrieve the Category object based on the ID
+            
             listing = form.save(commit=False)
+            listing.category = category
             listing.user = request.user
             form.save()
             return redirect('listing_list')
     else:
         form = ListingForm()
     
-    return render(request, 'auctions/listing/create_listing.html', {'form': form})
+    categories = Category.objects.all()
+    
+    return render(request, 'auctions/listing/create_listing.html', {'form': form, 'categories': categories})
     
 # Edit listing
 def edit_listing(request, pk):
@@ -211,3 +217,11 @@ def close_auction(request, listing_id):
 def all_listing(request):
     listings = Listing.objects.all()
     return render(request, 'auctions/listing/all_listing.html', {'listings': listings})
+
+def active_listing(request):
+    listings = Listing.objects.all()
+    return render(request, 'auctions/listing/active.html', {'listings': listings})
+
+def closed_listing(request):
+    listings = Listing.objects.all()
+    return render(request, 'auctions/listing/closed.html', {'listings': listings})

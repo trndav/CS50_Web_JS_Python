@@ -6,6 +6,14 @@ from django.core.exceptions import ValidationError
 class User(AbstractUser):
     pass
 
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    parent_category = models.ForeignKey('self', null=True, blank=True, related_name='subcategories', on_delete=models.CASCADE)
+    status = models.CharField(max_length=50)
+    def __str__(self):
+        return self.name
+
 # Image validator - cant be greater than 500 KB
 def validate_image_size(value):
     filesize = value.size
@@ -24,6 +32,7 @@ class Listing(models.Model):
     current_highest_bid = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     is_active = models.BooleanField(default=True)
     winner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='won_listings')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     def __str__(self):
         return self.title
 
