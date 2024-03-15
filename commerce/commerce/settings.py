@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'auctions',
+    'seed_categories',
+    'seed_users_items',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

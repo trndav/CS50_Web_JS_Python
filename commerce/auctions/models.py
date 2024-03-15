@@ -26,13 +26,16 @@ class Listing(models.Model):
     title = models.TextField(max_length=64)
     text = models.TextField(max_length=512)
     start_bid = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
-    image = models.ImageField(upload_to='listing_images/', validators=[validate_image_size], blank=True, null=True)
+    image = models.ImageField(upload_to='listing_images/', default='no_image.jpg', validators=[validate_image_size], blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     current_highest_bid = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     is_active = models.BooleanField(default=True)
     winner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='won_listings')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    # Count bids
+    def bid_count(self):
+        return Bid.objects.filter(listing=self).count()
     def __str__(self):
         return self.title
 

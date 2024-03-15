@@ -1,7 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>All Listings</h2>    
+    <h2 style="padding-left: 20px; padding-bottom: 10px;">All Listings</h2>    
         {% for item in listings %}
 
         {% if forloop.counter0|divisibleby:2 %}
@@ -13,7 +13,9 @@
                 <table>                
                     <td>
                         {% if item.image %}
-                        <a href="/auctions/listing/{{ item.id }}"><img src="{{ item.image.url }}" style="width: 200px; height: 200px;" alt="Listing Image" class="img-fluid"></a><br>
+                            <a href="/auctions/listing/{{ item.id }}"><img src="{{ item.image.url }}" style="width: 200px; height: 200px;" alt="Listing Image" class="img-fluid"></a><br>
+                        {% else %}
+                            <img src="/media/listing_images/no_image.jpg" alt="Default Image">
                         {% endif %}
                     </td>
                     <td class="table_margin" style="padding-left: 10px;">

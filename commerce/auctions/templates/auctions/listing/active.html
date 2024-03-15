@@ -1,7 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2 style="padding-left: 20px; padding-bottom: 10px;">Active Listings</h2>
     
         {% for item in listings %}
         {% if item.is_active %}

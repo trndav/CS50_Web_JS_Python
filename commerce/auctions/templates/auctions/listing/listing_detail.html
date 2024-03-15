@@ -1,13 +1,21 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+
+<div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+
 <div class="listing_container">
         <table>
-        <td>{% if listing.image %}
+        <td>
+        {% if listing.image %}
                 <img src="{{ listing.image.url }}" style="width: 200px; height: 200px;" alt="Listing Image" class="img-fluid"><br>
-                {% endif %}
+        {% else %}
+                <img src="/media/listing_images/no_image.jpg" alt="Default Image">
+        {% endif %}
         </td>
-        <td class="table_margin" style="padding-right: 10px;">  
+        <td class="table_margin" style="padding-left: 10px;">  
                 {% if user.is_authenticated %}
                     {% if not listing.is_active %}
                         <p>This listing is closed.</p>
@@ -21,8 +29,9 @@
 
                 <h4>{{ listing.title }}</h4>
                 <b>Price: ${{ listing.start_bid }}</b></br>
-                Listing Id: {{ listing.id }}. {{ listing.text }}<br>
-                <p class="created_at">Created at: {{ listing.created_at }}</p>
+                Listing Id: {{ listing.id }}. {{ listing.text }}</br>
+                Category: {{ category.name }}. Listing Id: {{ listing.id }}. Bids so far: <b>{{ listing.bid_count }}</b>
+                <p class="created_at"><a href="#">{{ listing.user }}</a> created auction at: {{ listing.created_at }}</p>
                
                 {% if user.is_authenticated %}
                
@@ -58,14 +67,14 @@
         </table>
         </div>
         <br>
-        <div class="listing_container">
+        <div class="css_comments">
         <table>
         <h5>Comments:</h5>
         {% for comment in comments %}
         <div>
-        <ul>
+                <ul>
                 <p><b>{{ comment.user.username }}</b> on <b style='font-size: 0.7em; color: grey;'>{{ comment.created_at }}</b><br> {{ comment.text }}</p>
-        </ul>
+                </ul>
         </div>
         {% endfor %}
         <br>
@@ -83,4 +92,7 @@
         </table>
         </div>
         <br>
+</div>
+</div>
+</div>
 {% endblock %}

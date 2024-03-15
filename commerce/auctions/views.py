@@ -101,6 +101,7 @@ def listing_list(request):
     return render(request, 'auctions/listing/index.html', {'listings': listings})
 
 # Create new listing
+@login_required(login_url='/login/')
 def create_listing(request):
     if request.method == 'POST':
         form = ListingForm(request.POST, request.FILES)
@@ -114,10 +115,8 @@ def create_listing(request):
             form.save()
             return redirect('listing_list')
     else:
-        form = ListingForm()
-    
-    categories = Category.objects.all()
-    
+        form = ListingForm()    
+    categories = Category.objects.all()    
     return render(request, 'auctions/listing/create_listing.html', {'form': form, 'categories': categories})
     
 # Edit listing
@@ -146,12 +145,12 @@ def listing_detail(request, pk):
     watchlist_items = Watchlist.objects.filter(user=request.user, listing=listing)
     comments = Comment.objects.all()
     comments = listing.comments.all()  # Retrieve comments related to the listing
+    category = listing.category
     if request.method == 'POST':
         text = request.POST.get('text')
         if text:
             Comment.objects.create(user=request.user, listing=listing, text=text)
             return redirect('listing_detail', pk=pk)   
-
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -161,32 +160,7 @@ def listing_detail(request, pk):
             return redirect('listing_detail', pk=pk)
     else:
         form = CommentForm()
-
-    return render(request, 'auctions/listing/listing_detail.html', {'listing': listing, 'watchlist_items': watchlist_items, 'comments': comments, 'form': form})
-
-
-# @login_required(login_url='/login/')  # Redirect non-authenticated users to the login page
-# def listing_detail(request, pk):
-#     listing = get_object_or_404(Listing, pk=pk)
-#     watchlist_items = None
-#     comments = None
-#     form = None
-#     if request.method == 'POST':
-#         if request.user.is_authenticated:
-#             form = CommentForm(request.POST)
-#             if form.is_valid():
-#                 text = form.cleaned_data['text']
-#                 Comment.objects.create(user=request.user, listing=listing, text=text)
-#                 return redirect('listing_detail', pk=pk)
-#         else:
-#             message = "You must be logged in to see auction items."
-#             return redirect('login_view', {'message': message})
-#     # Retrieve watchlist items and comments only if the user is authenticated
-#     if request.user.is_authenticated:
-#         watchlist_items = Watchlist.objects.filter(user=request.user, listing=listing)
-#         comments = listing.comments.all()
-#         form = CommentForm()
-#     return render(request, 'auctions/listing/listing_detail.html', {'listing': listing, 'watchlist_items': watchlist_items, 'comments': comments, 'form': form})
+    return render(request, 'auctions/listing/listing_detail.html', {'listing': listing, 'watchlist_items': watchlist_items, 'comments': comments, 'form': form, 'category': category})
 
 # Add to watchlist
 @login_required
