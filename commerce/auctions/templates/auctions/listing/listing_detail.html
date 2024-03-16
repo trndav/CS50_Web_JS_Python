@@ -30,7 +30,7 @@
                 <h4>{{ listing.title }}</h4>
                 <b>Price: ${{ listing.start_bid }}</b></br>
                 Listing Id: {{ listing.id }}. {{ listing.text }}</br>
-                Category: {{ category.name }}. Listing Id: {{ listing.id }}. Bids so far: <b>{{ listing.bid_count }}</b>
+                Category: <b>{{ category.name }}</b>. Listing Id: {{ listing.id }}. Bids so far: <b>{{ listing.bid_count }}</b>
                 <p class="created_at"><a href="#">{{ listing.user }}</a> created auction at: {{ listing.created_at }}</p>
                
                 {% if user.is_authenticated %}

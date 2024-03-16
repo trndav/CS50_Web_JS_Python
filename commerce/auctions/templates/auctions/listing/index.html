@@ -22,8 +22,8 @@
                 <td class="table_margin" style="padding-left: 10px;">
                     <h4><a href="/auctions/listing/{{ item.id }}">{{ item.title }}</a></h4>
                     <b>Price: ${{ item.start_bid }}</b></br>
-                    Listing Id: {{ item.id }}. {{ item.text }}<br>
-                    <p class="created_at">Created at: {{ item.created_at }}</p>    
+                    Listing Id: {{ item.id }}. {{ item.text }}<br>                      
+                    <p class="created_at"><a href="#">{{ item.user }}</a> created at: {{ item.created_at }}</p>
 
                     <form method="post" action="{% url 'listing_detail' item.pk %}">
                         {% csrf_token %}
