@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Animate</title>
+        <style>
+            @keyframes grow {
+                /* Moving from 0% animation, to 50% and 100% different options. */
+                0% {
+                    left: 0%;
+                    font-size: 7px;
+                }
+                50% {
+                    left: 50%;
+                    font-size: 80px;
+                }
+                100% {
+                    left: 0%;
+                    font-size: 40px;
+                }
+            }
+            h1 {
+                position: relative;
+                animation-name: grow;
+                animation-duration: 4s;
+                animation-fill-mode: forwards;
+                animation-iteration-count: infinite; /* Can be infinite */
+            }
+        </style>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const h1 = document.querySelector('h1');
+                h1.style.animationPlayState = 'paused';
+                document.querySelector('button').onclick = () => {
+                    if (h1.style.animationPlayState === 'paused') {
+                        h1.style.animationPlayState = 'running';
+                    } else {
+                        h1.style.animationPlayState = 'paused';
+                    }
+                }
+            });
+        </script>
+    </head>
+    <body>
+        <button>Click Here!</button>
+        <h1>Welcome!</h1>        
+    </body>
+</html>

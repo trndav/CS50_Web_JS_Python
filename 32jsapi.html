@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Stocks API</title>
+        
+        <script>            
+            document.addEventListener('DOMContentLoaded', function() {
+
+                document.querySelector('form').onsubmit = function() {
+
+                fetch('https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo')
+                .then(response => response.json())
+                .then(data => {
+                // Accessing the symbol name
+                    const currency = document.querySelector('#currency').value.toUpperCase();                    
+                    const symbol = data["Meta Data"][currency];
+                    console.log(symbol); // Output: "IBM"
+                    if (symbol !== undefined) {
+                        document.querySelector('body').innerHTML = `Meta Data is: ${symbol}.`;
+                    } else {
+                        document.querySelector('#result').innerHTML = "Invalid value.";
+                    }
+                })
+                        // Catch any errors and log them to the console
+                .catch(error => {
+                    console.log('Error:', error);
+                });
+                return false;
+            }
+            });         
+        </script>
+
+    </head>
+    <body>
+        <h1>Stocks API with AJAX - Asynchronous JavaScript And XML!</h1>
+        <form>
+            <input id="currency" placeholder="Currency" type="text">
+            <input type="submit" value="Convert">
+        </form>
+        <div id="result">
+
+        </div>
+    </body>
+</html>
