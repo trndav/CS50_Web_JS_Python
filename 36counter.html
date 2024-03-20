@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- React, ReactDOM, Babel -->
+        <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <title>Counter</title>
+    </head>
+    <body>
+        <div id="app"></div>
+        <script type="text/babel">
+            function App() {
+                // Creating state of counter 0. Initializes count to 0 and allows SetCounter to change count.
+                const [count, setCount] = React.useState(0);
+                function updateCount() {
+                    setCount(count + 1);
+                }
+                const x = 1;
+                const y = 2;
+                return (
+                    <div>
+                        Hi there! x + y = {x+y}
+                        <div>{count}</div>
+                        <button onClick={updateCount}>Count</button>
+                    </div>
+                );
+            }
+            // Render component in page, render App() to #app element
+            ReactDOM.render(<App />, document.querySelector("#app"));
+        </script>
+    </body>
+</html>

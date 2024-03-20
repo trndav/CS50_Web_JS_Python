@@ -3,10 +3,10 @@
     <head>
         <title>My Webpage</title>
         <style>
-
+ 
             @keyframes hide {
                 0% {
-                    opacity: 1;
+                    opacity: 1; /* How much transparent is */
                     height: 100%;
                     line-height: 100%;
                     padding: 20px;
@@ -65,7 +65,7 @@
                 }
             };
 
-            // If hide button is clicked, delete the post
+            // If hide button is clicked, delete the post. Event is JS object activated on click
             document.addEventListener('click', event => {
                 const element = event.target;
                 if (element.className === 'hide') {
@@ -95,7 +95,7 @@
             // Add a new post with given contents to DOM
             function add_post(contents) {
 
-                // Create new post
+                // Create new post + hide button
                 const post = document.createElement('div');
                 post.className = 'post';
                 post.innerHTML = `${contents} <button class="hide">Hide</button>`;

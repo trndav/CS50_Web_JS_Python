@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- React, ReactDOM, Babel -->
+        <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <title>React</title>
+    </head>
+    <body>
+        <div id="app"></div>
+        <script type="text/babel">
+            function Hi(props) {
+                return (
+                    <h1>Holas {props.name}!</h1>
+                )
+            }
+            function App() {
+                const x = 1;
+                const y = 2;
+                return (
+                    <div>
+                        Hi there! x + y = {x+y}
+                        <Hi name="Bob" />
+                        <Hi name="Garo" />   
+                        <Hi name="Sasa" />                           
+                    </div>
+                );
+            }
+            // Render component in page, render App() to #app element
+            ReactDOM.render(<App />, document.querySelector("#app"));
+        </script>
+    </body>
+</html>
