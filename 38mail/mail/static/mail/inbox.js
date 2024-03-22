@@ -56,7 +56,8 @@ function load_mailbox(mailbox) {
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
   document.querySelector('#single-email-content').innerHTML= '';
-  
+  document.querySelector('#emails-view').innerHTML= '';
+    
   // Fetch inbox messages from the server
   fetch(`/emails/${mailbox}`)
     .then(response => response.json())
@@ -64,20 +65,48 @@ function load_mailbox(mailbox) {
       document.querySelector('#emails-view').innerHTML = '';
       document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
+      if (mailbox === 'inbox' || mailbox === 'archive')
       emails.forEach(email => {
         const emailDiv = document.createElement('div');
+        emailDiv.style.paddingLeft = '10px';
         emailDiv.style.backgroundColor = email.read ? 'lightgray' : 'white'; // Set background color based on read status
         emailDiv.innerHTML = `
-          <p><b>From:</b> ${email.sender} 
+          <p><b>From:</b> ${email.sender} <b>To:</b> ${email.recipients} 
           <b>Subject:</b> ${email.subject}</p>
           ${email.body}
+          <button class="archive-btn">${mailbox === 'inbox' ? 'Archive' : 'Unarchive'}</button>
           <hr>
         `;
+
+        // Archive button
+        emailDiv.querySelector('.archive-btn').addEventListener('click', () => {
+            // Prevent event propagation
+            event.stopPropagation();
+          // Archive or unarchive the email when the button is clicked
+          fetch(`/emails/${email.id}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+              archived: mailbox === 'inbox' ? true : false
+            }),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to archive/unarchive email.');
+            }
+            // Load the user's inbox after archiving/unarchiving
+            document.querySelector('#single-email-content').innerHTML= '';
+            document.querySelector('#emails-view').innerHTML= '';       
+            load_mailbox(mailbox);
+          })
+          .catch(error => console.error('Error archiving/unarchiving email:', error));
+        });
 
         emailDiv.addEventListener('click', () => {
           // Load the email when clicked
           load_email(email.id, mailbox);
-
           // Mark the email as read
           fetch(`/emails/${email.id}`, {
             method: 'PUT',
@@ -100,10 +129,36 @@ function load_mailbox(mailbox) {
 
         document.querySelector('#emails-view').appendChild(emailDiv);
       });
+      
+      if (mailbox === 'sent') {
+        fetch(`/emails/${mailbox}`)
+        .then(response => response.json())
+        .then(emails => {
+            // Clear the emails view
+            document.querySelector('#emails-view').innerHTML = '';
+
+            // Display a heading for the sent emails
+            document.querySelector('#emails-view').innerHTML = `<h3>Sent</h3>`;
+
+            // Iterate through each sent email and display it
+            emails.forEach(email => {
+                const emailDiv = document.createElement('div');
+                emailDiv.style.paddingLeft = '10px';
+                emailDiv.style.backgroundColor = email.read ? 'lightgray' : 'white'; // Set background color based on read status
+                emailDiv.innerHTML = `
+                    <p><b>From:</b> ${email.sender} To:</b> ${email.recipients.join(', ')} 
+                    <b>Subject:</b> ${email.subject}</p>
+                    ${email.body}
+                    <hr>
+                `;
+                document.querySelector('#emails-view').appendChild(emailDiv);
+            });
+        })
+        .catch(error => console.error('Error fetching sent emails:', error));  
+      }
     })
     .catch(error => console.error('Error fetching inbox messages:', error));
 }
-
 
 function load_email(email_id, origin_mailbox) {
     document.querySelector('#emails-view').style.display = 'none';
@@ -166,7 +221,6 @@ function load_email(email_id, origin_mailbox) {
         document.querySelector("#single-email-back-section").append(back_button_row_div);
       })
       .catch(error =>console.log(error));
-
 
       fetch(`/emails/${email_id}`, {
           method: 'PUT',
