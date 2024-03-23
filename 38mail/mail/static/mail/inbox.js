@@ -160,13 +160,76 @@ function load_mailbox(mailbox) {
     .catch(error => console.error('Error fetching inbox messages:', error));
 }
 
+// Reply email
+function reply_email(email) {
+  const composeView = document.querySelector('#compose-view');
+
+  // Set the recipients
+  const recipientsInput = composeView.querySelector('#compose-recipients');
+  recipientsInput.value = email.sender; // Set the original sender as the recipient
+
+  // Set the subject (prepend "Re:" to the original subject)
+  const subjectInput = composeView.querySelector('#compose-subject');
+  subjectInput.value = `Re: ${email.subject}`;
+
+  // Set the body (prepend "On [timestamp], [sender] wrote:" to the original body)
+  const bodyInput = composeView.querySelector('#compose-body');
+  const timestamp = new Date(email.timestamp).toLocaleString();
+  const originalBody = `\n\n -------------------- \nOn ${timestamp}, ${email.sender} wrote:\n${email.body}\n`;
+  bodyInput.value = originalBody;
+
+  // Show the compose view and hide other views
+  document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#single-email-view').style.display = 'none';
+  composeView.style.display = 'block';
+
+  // Attach event listener to send button
+  const sendButton = composeView.querySelector('#send-button');
+  sendButton.addEventListener('click', () => {
+    // Construct the data object to be sent in the POST request
+    const data = {
+      recipients: recipientsInput.value,
+      subject: subjectInput.value,
+      body: bodyInput.value
+    };
+
+    // Make a POST request to the /emails endpoint
+    fetch('/emails', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.message); // Log the success message
+      // Load sent mailbox
+      load_mailbox('sent');
+    })
+    .catch(error => {
+      console.error('Error:', error); // Log any errors
+    });
+  });
+}
+
+  // Function to extract reply message from the email body
+  function extractReplyMessage(emailBody) {
+    // Split the email body using the delimiter
+    const parts = emailBody.split(' -------------------- ');
+    // console.log('EmailBody in function: ', emailBody);
+    
+    // If the split results in more than one part, consider the last part as the reply message
+    if (parts.length > 1) {
+      return parts[parts.length - 1].trim();
+    }
+    // If no delimiter found, return the entire body
+    return emailBody;
+  }
+
 function load_email(email_id, origin_mailbox) {
     document.querySelector('#emails-view').style.display = 'none';
     document.querySelector('#compose-view').style.display = 'none';
     document.querySelector('#single-email-view').style.display = 'block';
-
     document.querySelector('#single-email-content').innerHTML= '';
-
     fetch(`/emails/${email_id}`)
       .then(response => response.json())
       .then(email => {
@@ -203,8 +266,22 @@ function load_email(email_id, origin_mailbox) {
                         button.addEventListener('click', callback_func);
                         div_col_reply_archive.append(button);
               });
-              div_row.append(div_col_reply_archive);
-         
+              div_row.append(div_col_reply_archive);    
+          } else if (email_element === "body") {
+              // Extract the reply message from the email body
+              const replyMessage = extractReplyMessage(email[email_element]);
+              console.log('Reply Message in body:', replyMessage);
+              console.log('Email element Message:', email[email_element]);
+              const div_row = document.createElement('div'); // Initialize div_row
+              div_row.classList.add("row", "email-body-section"); // Add necessary classes
+              const div_col_body = document.createElement('div');
+              div_col_body.classList.add("col-12");
+              div_col_body.innerHTML = `<p>${email[email_element]}</p>`; // Set inner HTML to the email body
+              div_row.appendChild(div_col_body); // Append div_col_body to div_row
+          
+              // Append div_row to #single-email-content
+              const singleEmailContent = document.querySelector("#single-email-content");
+              singleEmailContent.appendChild(div_row);
           } else {         
               div_row.innerHTML = `<p>${email[email_element]}</p>`;              
           }
@@ -218,6 +295,7 @@ function load_email(email_id, origin_mailbox) {
         back_button_col_div.innerHTML = `<p>${origin_mailbox.charAt(0).toUpperCase() + origin_mailbox.slice(1)}</p>`;
         back_button_col_div.addEventListener('click', () => load_mailbox(origin_mailbox));
         back_button_row_div.append(back_button_col_div);
+
         document.querySelector("#single-email-back-section").append(back_button_row_div);
       })
       .catch(error =>console.log(error));
@@ -229,3 +307,4 @@ function load_email(email_id, origin_mailbox) {
           })
       }).then();
   }
+
