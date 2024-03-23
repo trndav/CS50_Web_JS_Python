@@ -16,6 +16,7 @@ function compose_email() {
   document.querySelector('#compose-recipients').value = '';
   document.querySelector('#compose-subject').value = '';
   document.querySelector('#compose-body').value = '';
+  document.querySelector('#single-email-content').innerHTML= '';
 
   // Add event listener to the email composition form submission
   document.querySelector('#compose-form').addEventListener('submit', function(event) {
@@ -175,7 +176,7 @@ function reply_email(email) {
   // Set the body (prepend "On [timestamp], [sender] wrote:" to the original body)
   const bodyInput = composeView.querySelector('#compose-body');
   const timestamp = new Date(email.timestamp).toLocaleString();
-  const originalBody = `\n\n -------------------- \nOn ${timestamp}, ${email.sender} wrote:\n${email.body}\n`;
+  const originalBody = ` -------------------- \nOn ${timestamp}, ${email.sender} wrote:\n${email.body}`;
   bodyInput.value = originalBody;
 
   // Show the compose view and hide other views
