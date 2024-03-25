@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Flight, Passenger
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -9,7 +9,8 @@ def index(request):
     })
 
 def flight(request, flight_id):
-    flight = Flight.objects.get(pk=flight_id)
+    # flight = Flight.objects.get(pk=flight_id)
+    flight = get_object_or_404(Flight, pk=flight_id)
     non_passengers = Passenger.objects.exclude(flights=flight).all()
     return render(request, "flights/flight.html", {
         "flight": flight,
